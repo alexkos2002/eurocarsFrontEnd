@@ -5,6 +5,7 @@ import HomeSelling from "../components/HomeSelling";
 import HomeRental from "../components/HomeRental";
 import Login from "../components/Login"
 import Registration from "../components/Registration"
+import Error403 from "../components/Error403"
 
 export default new VueRouter({
     mode: 'history',
@@ -25,14 +26,19 @@ export default new VueRouter({
             component: HomeRental
         },
         {
-            path: '/login',
+            path: '/auth/signin',
             name: 'login',
             component: Login
         },
         {
-            path: "/registration",
+            path: "/auth/signup",
             name: "registration",
             component: Registration
+        },
+        {
+            path: "/error/403",
+            name: "error403",
+            componennt: Error403
         }
     ]
 })

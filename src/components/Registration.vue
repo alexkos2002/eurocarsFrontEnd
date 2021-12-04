@@ -5,16 +5,16 @@
             <p text="${addUserMessage}" class="cRed"></p>
         </div>
         <label for="username">Enter name: </label>
-        <input type="text" name="username" v-model="userRegDto.username" class="form-control" id="username">
+        <input type="text" name="username" v-model="userRegDto.username" v-validate="'required'" class="form-control" id="username">
         <br/>
         <label for="password">Enter password: </label>
-        <input type="text" name="password" v-model="userRegDto.password" class="form-control" id="password">
+        <input type="text" name="password" v-model="userRegDto.password" v-validate="'required'" class="form-control" id="password">
         <br/>
         <label for="email">Enter email: </label>
-        <input type="text" name="email" v-model="userRegDto.email" class="form-control" id="email">
+        <input type="text" name="email" v-model="userRegDto.email" v-validate="'required|email'" class="form-control" id="email">
         <br/>
         <label for="telephoneNum">Enter phone number: </label>
-        <input type="text" name="telephoneNum" v-model="userRegDto.telephoneNum" class="form-control" id="telephoneNum">
+        <input type="text" name="telephoneNum" v-model="userRegDto.telephoneNum" v-validate="'regex: [\d]{10}'" class="form-control" id="telephoneNum">
         <br/>
         <input type="submit" value="Register" class="btn btn-info mb-2 d-flex justify-content-start" id="regSubmit">
         <div v-if="regFormSent && regSuccess" class="alert alert-success">You've succesfully registered</div>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import UserService from '../services/UserService';
+import AuthService from '../services/AuthService';
 
     export default {
         name: 'Registration',
@@ -44,7 +44,7 @@ import UserService from '../services/UserService';
             registerUser(e) {
                 console.warn(this.userRegDto);
                 e.preventDefault();
-                UserService.registerUser(this.userRegDto)
+                AuthService.registerUser(this.userRegDto)
                 .then((response) => {
                     this.regSuccess = response.data.success
                 });

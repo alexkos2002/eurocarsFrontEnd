@@ -1,13 +1,11 @@
 import axios from 'axios'
+import authHeader from './AuthHeader';
 
-const USER_API_BASE_URL = 'http://localhost:8080/api/eurocars/user'
+const USER_API_BASE_URL = 'http://localhost:8080/api/eurocars/user';
 
 class UserService {
     getUsers() {
-        return axios.get(USER_API_BASE_URL);
-    }
-    registerUser(userRegDto) {
-        return axios.post(USER_API_BASE_URL, userRegDto);
+        return axios.get(USER_API_BASE_URL, { headers: authHeader() });
     }
 }
 

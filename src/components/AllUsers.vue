@@ -8,6 +8,7 @@
                 <th>Email</th>
                 <th>Telephone number</th>
                 <th>Active</th>
+                <th>Roles</th>
             </thead>
             <tbody>
                 <tr v-for = "user in users" v-bind:key="user.id">
@@ -16,6 +17,7 @@
                     <td>{{user.email}}</td>
                     <td>{{user.telephoneNum}}</td>
                     <td>{{user.active}}</td>
+                    <td>{{user.roles}}</td>
                 </tr>
             </tbody>
         </table>
@@ -23,25 +25,35 @@
 </template>
 
 <script>
+
 import UserService from '../services/UserService';
+import VueRouter from "../router/index"
+import Pathes from "../constants/Pathes"
 
     export default {
         name: 'All',
         data() {
             return {
-                users : []
+                users : [],
+                authUserRoles : []
             }
         }, 
         methods: {
             getUsers() {
-
                 UserService.getUsers().then((response) => {
                     this.users = response.data;
+                }).catch((error) => {
+                    console.log(error);
+                    VueRouter.push(Pathes.ERROR_403_PATH);
                 });
+            },
+            getAuthUserRoles() {
+                this.authUserRoles = localStorage.getItem('roles');
             }
         },
         created() {
-            this.getUsers()
+            this.getUsers();
+            this.getAuthUserRoles();
         }
     }
 </script>

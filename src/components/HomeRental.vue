@@ -1,10 +1,25 @@
 <template>
 <div>
-      <header>
+         <header>
           <div class="sideMenu">
               <div class="rectangle"></div>
               <div class="rectangle"></div>
               <div class="rectangle"></div>
+
+              <div class="sideMenuFull">
+                  <div class="X">
+                      <img src="../assets/icons/X.png">
+                  </div>
+                  <ul>
+                      <li><a>Акції та пропозиції</a></li>
+                      <li><a>Компанії, що співпрацюють з нами</a></li>
+                      <li><a>Про нас</a></li>
+                      <li><a>Стати партнером</a></li>
+                      <li><a>Privacy policy</a></li>
+                      <li><a>FAQ</a></li>
+                      <li><a>Admin profile</a></li>
+                  </ul>
+              </div>
           </div>
           <div class="shop">
               <img src="../assets/icons/shop.png">
@@ -26,10 +41,10 @@
       </header>
       <main>
           <div class="chose">
-                  <div class="buy unselected">
+                  <div class="buy" id="chosen">
                   <a href="/home/selling">Купити</a>
               </div>
-              <div class="rent selected">
+              <div class="rent">
                   <a href="/home/rental">Орендувати</a>
               </div>
           </div>
@@ -215,6 +230,9 @@
               </ul>
           </div>
       </main>
+    <div class="bottom">
+        <img class="src" src="../assets/icons/bigSearch.png">
+    </div>
     </div>
 </template>
 
@@ -239,15 +257,12 @@ main {
   padding-bottom: 58px;
 }
 
-p {
-  margin: 0;
+ul {
+  padding: 0;
 }
 
-.mainwrapper {
-  background: #2f134b;
-  color: white;
+p {
   margin: 0;
-  font-family: "Gogh", sans-serif;
 }
 
 .rectangle {
@@ -291,30 +306,12 @@ p {
 .chose div {
   width: 100%;
   text-align: center;
-  color: #4f0154;
-  border-radius: 10px 10px 1px 1px;
-  margin: auto 8px;
-}
-
-.chose div a {
-  text-decoration: none;
-  font-size: 2em;
-  color: #FFFFFF;
-}
-
-.chose div:hover{
-  width: 100%;
-  text-align: center;
-  background: #77026d;
-  border-radius: 10px 10px 1px 1px;
-  margin: auto 8px;
-}
-
-.unselected {
   background: #4f0154;
+  border-radius: 10px 10px 1px 1px;
+  margin: auto 8px;
 }
 
-.selected {
+#chosen {
   background: #77026d;
 }
 
@@ -323,13 +320,10 @@ p {
   background: #77026d;
 }
 
-/*.searchLine // Купити; Під запитанням
- * display: flex
- * align-items: center
- * margin-bottom: 50px */
 .searchLine {
   display: flex;
   align-items: center;
+  margin-bottom: 50px;
 }
 
 .find {
@@ -362,7 +356,7 @@ p {
   height: 43px;
   margin-left: -8px;
   background: deeppink;
-  border-radius: 0 9px 9px 0;
+  border-radius: 0px 9px 9px 0px;
   text-align: center;
   line-height: 42px;
   font-weight: 600;
@@ -379,105 +373,115 @@ p {
   font-weight: 600;
 }
 
-.rentLine {
+.carTopLine {
   display: flex;
-  align-items: center;
-  margin: 25px auto;
+  margin: 0 15% 0 15%;
 }
 
-.date {
-  height: 29px;
-  width: 128px;
-  margin-right: 21px;
-  margin-left: auto;
-  background: white;
-  border-radius: 16px;
-  text-align: center;
+.rateBlock {
   display: flex;
+  vertical-align: center;
 }
 
-.date {
-  color: silver;
-  font-family: "Gogh", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+.rate {
+  vertical-align: center;
+  margin-right: 2px;
 }
 
-.date p {
+.carLike {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.slider {
   margin: auto;
 }
 
-.city {
-  height: 29px;
-  width: 128px;
-  margin-left: 21px;
-  background: white;
-  border-radius: 16px;
-  text-align: center;
-  display: flex;
+.sliderLeft {
+  position: absolute;
+  top: 40%;
+  left: 7%;
 }
 
-.city {
-  color: silver;
-  font-family: "Gogh", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+.sliderRight {
+  position: absolute;
+  top: 40%;
+  right: 7%;
 }
 
-.city p {
-  margin: auto;
+.slider__items {
+  height: 150px;
+  margin-top: 20px;
 }
 
-.cars {
-  margin-top: 25px;
-}
-
-.cars {
-  padding: 0;
-  list-style-type: none;
-  display: grid;
-  grid-gap: 15px;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-}
-
-.cars li {
-  width: 170px;
-  height: 200px;
-  text-align: center;
-  margin: auto;
-  padding: 2px 5px;
-}
-
-li .like {
-  text-align: left;
-}
-
-.chButton {
-  width: 104px;
-  height: 24px;
-  border: solid deeppink;
-  border-radius: 5px;
-  margin: 7px auto auto;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 22px;
+.slider__item {
   text-align: center;
 }
 
-.price {
+.slider__item img {
+  max-width: 75%;
+  max-height: 150px;
+}
+
+.carNameBlock {
+  text-align: center;
+}
+
+.carNameBlock p {
+  margin: 2px;
+}
+
+.carPrice {
   color: yellow;
-  margin-top: 2px;
 }
 
-.name {
+.carButtonLine {
+  display: flex;
   margin-top: 12px;
 }
 
-li .img {
-  position: relative;
-  width: 151px;
-  height: 75px;
-  margin: auto;
+.carBuyButton {
+  width: 157px;
+  height: 46px;
+  border-radius: 9px;
+  background-color: deeppink;
+  margin-left: 7%;
+  margin-right: 3%;
+  line-height: 46px;
+  text-align: center;
+}
+
+.carReserveButton {
+  width: 157px;
+  height: 46px;
+  border-radius: 9px;
+  border-style: solid;
+  border-color: deeppink;
+  margin-right: 7%;
+  margin-left: auto;
+  line-height: 46px;
+  text-align: center;
+}
+
+.carParameters {
+  margin-top: 40px;
+  padding-bottom: 40px;
+}
+
+.carParameters li {
+  list-style: none;
+  display: flex;
+  margin-top: 5px;
+}
+
+.parameter {
+  margin-left: 12%;
+  margin-right: auto;
+}
+
+.parameterValue {
+  margin-left: 3%;
+  margin-right: 12%;
 }
 
 .bottom {
@@ -491,146 +495,5 @@ li .img {
 
 .src {
   margin: 14px auto auto 15%;
-}
-
-.filtersFull {
-  display: none;
-  background-color: deeppink;
-  width: 203px;
-  position: absolute;
-  margin-left: auto;
-  margin-right: 0;
-  text-align: center;
-  border-radius: 9px 0 0 9px;
-  font-size: 15px;
-  z-index: 1;
-  top: 121px;
-  right: 0;
-  height: 500px;
-  overflow: scroll;
-}
-
-.filters:hover .filtersFull {
-  display: block;
-}
-
-.filtersFull::-webkit-scrollbar {
-  width: 0 !important;
-}
-
-.filtersFull ul {
-  padding: 0;
-}
-
-.filtersFull li {
-  list-style-type: none;
-  margin: auto;
-}
-
-.Fline1 {
-  display: flex;
-  height: 43px;
-}
-
-.Fline1 img {
-  height: 12px;
-  margin-left: 12px;
-  margin-top: 13px;
-}
-
-.Fline1 p {
-  margin: auto;
-  position: relative;
-  right: 11px;
-}
-
-.fromTo {
-  display: flex;
-  font-size: 9px;
-  margin: auto;
-}
-
-.fromTo p {
-  margin: 0;
-}
-
-.from {
-  margin-left: 29px;
-  margin-right: 33px;
-}
-
-.fromVal {
-  width: 56px;
-  height: 18px;
-  border-radius: 5px;
-  border-color: #FFFFFF;
-  border-style: solid;
-  line-height: 18px;
-  text-align: center;
-}
-
-.fromN {
-  position: relative;
-  line-height: 15px;
-  color: #AE007D;
-  right: 20%;
-}
-
-.toVal {
-  width: 56px;
-  height: 18px;
-  border-radius: 5px;
-  border-color: #FFFFFF;
-  border-style: solid;
-  line-height: 18px;
-  text-align: center;
-}
-
-.toN {
-  position: relative;
-  line-height: 15px;
-  color: #AE007D;
-  left: 20%;
-}
-
-.sortFull {
-  display: none;
-  background-color: deeppink;
-  width: 203px;
-  position: absolute;
-  margin-left: auto;
-  margin-right: 0;
-  text-align: center;
-  border-radius: 0 9px 9px 0;
-  font-size: 15px;
-  z-index: 1;
-  top: 121px;
-  left: 0;
-  height: 500px;
-  overflow: scroll;
-}
-
-.sort:hover .sortFull {
-  display: block;
-}
-
-.sortFull::-webkit-scrollbar {
-  width: 0 !important;
-}
-
-.sortFull ul {
-  padding: 0;
-  margin: 0;
-}
-
-.sortFull li {
-  margin-top: 45px;
-}
-
-.sortFull .X {
-  position: absolute;
-  right: 12px;
-  top: 10px;
-  height: 12px;
 }
 </style>

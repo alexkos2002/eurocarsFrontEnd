@@ -102,7 +102,7 @@
                       </div>
                   </div>
               </div>
-              <div class="rentLine"> <!-- Блок, що з'являється лише при оренді -->
+              <div class="rentLine"> <!-- Element which appears only on rental page-->
                   <div class="city"><p>Місто</p></div>
                   <div class="date"><p>Дата</p></div>
               </div>
