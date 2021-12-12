@@ -66,7 +66,7 @@
               <input type="email" placeholder="Пошта" v-model.trim="form.email">
             </li>
             <li class="currentAdminName">
-              <input type="tel" placeholder="Телефон" v-model.trim="form.telephone">
+              <input type="tel" placeholder="Телефонн" v-model.trim="form.telephone">
             </li>
             <li class="currentAdminName">
               <input type="password" placeholder="Придумайте пароль" v-model.trim="form.pass">
