@@ -10,6 +10,8 @@ import CarPage from "../components/CarPage";
 import addAdmin from "../components/addAdmin";
 import History from  "../components/history";
 import Order from  "../components/order"
+import newLogin from "../components/newLogin";
+import newRegistration from "../components/newRegistration";
 
 export default new VueRouter({
     mode: 'history',
@@ -40,9 +42,19 @@ export default new VueRouter({
             component: Login
         },
         {
+          path: '/auth/login',
+          name: 'login',
+          component: newLogin
+        },
+        {
             path: "/auth/signup",
             name: "registration",
             component: Registration
+        },
+        {
+            path: "/auth/registration",
+            name: "registration",
+            component: newRegistration
         },
         {
             path: "/addAdmin",
