@@ -36,14 +36,13 @@ import Pathes from "../constants/Pathes"
                     username: null,
                     password: null,
                 },
-                loginMessage: "You've successfully logged in!",
+                loginMessage: StringConstants.LOGIN_SUCCESS,
                 loginFormSent: false,
                 loginSuccess: true, 
             }
         },
         methods: {
             login(e) {
-                console.warn(this.userRegDto);
                 e.preventDefault();
                 AuthService.login(this.userAuthDto)
                 .then((response) => {
@@ -51,7 +50,11 @@ import Pathes from "../constants/Pathes"
                         localStorage.setItem('jwt', response.data.jwt);
                         localStorage.setItem('roles', response.data.roles);
                         this.loginSuccess = true;
-                        if (response.data.roles.includes(StringConstants.USER_ROLE)) {
+                        if (response.data.roles.includes(StringConstants.ADMIN_ROLE)) {
+                            VueRouter.push(Pathes.ADMIN_ROOM_PATH);
+                        } else if (response.data.roles.includes(StringConstants.MANAGER_ROLE)){
+                            VueRouter.push(Pathes.HOME_RENTAL_PATH);
+                        } else if (response.data.roles.includes(StringConstants.USER_ROLE)) {
                             VueRouter.push(Pathes.HOME_RENTAL_PATH);
                         }
                     }

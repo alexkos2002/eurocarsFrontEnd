@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="mainWrapper">
          <header>
           <div class="sideMenu">
               <div class="rectangle"></div>
@@ -34,17 +34,19 @@
               <div class="cash">
                   <img src="../assets/icons/$.png">
               </div>
-              <div class="profile">
-                  <img src="../assets/icons/profile.png">
-              </div>
+              <a id="profileLink" v-on:click="showLoginForm()">
+                <div class="profile">
+                    <img src="../assets/icons/profile.png">
+                </div>
+              </a>
           </div>
       </header>
       <main>
           <div class="chose">
-                  <div class="buy" id="chosen">
+                  <div class="buy" >
                   <a href="/home/selling">Купити</a>
               </div>
-              <div class="rent">
+              <div class="rent" id="chosen">
                   <a href="/home/rental">Орендувати</a>
               </div>
           </div>
@@ -238,10 +240,41 @@
 
 <script>
 
+import VueRouter from "../router/index"
+import Pathes from "../constants/Pathes"
+import StringConstants from "../constants/StringConstants"
+
+    export default {
+      name: 'HomeRental',
+      methods: {
+        showLoginForm() {
+          if (localStorage.getItem('jwt') && localStorage.getItem('roles')) {
+            if (localStorage.getItem('roles').includes(StringConstants.ADMIN_ROLE)) {
+              VueRouter.push(Pathes.ADMIN_ROOM_PATH);
+            } else if (localStorage.getItem('roles').includes(StringConstants.MANAGER_ROLE)) {
+              VueRouter.push(Pathes.HOME_RENTAL_PATH);
+            } else {
+              VueRouter.push(Pathes.HOME_RENTAL_PATH);
+            }
+          } else {
+            VueRouter.push(Pathes.SIGN_IN_PATH);
+          }
+        
+        }
+      }
+    }
 </script>
 
 <style>
-        @charset "UTF-8";
+@charset "UTF-8";
+
+.mainWrapper {
+  font-weight: 600;
+  background: #2f134b;
+  color: white;
+  margin: 0;
+  font-family: "Gogh", sans-serif;
+}
 
 header {
   height: 62px;
@@ -255,10 +288,6 @@ header {
 
 main {
   padding-bottom: 58px;
-}
-
-ul {
-  padding: 0;
 }
 
 p {
@@ -303,6 +332,14 @@ p {
   font-size: small;
 }
 
+.chose a{
+  text-decoration: none;
+  font-size: 5em;
+  color: white;
+  font-family: "Gogh", sans-serif;
+  font-size: small;
+}
+
 .chose div {
   width: 100%;
   text-align: center;
@@ -320,10 +357,13 @@ p {
   background: #77026d;
 }
 
+/*.searchLine // Купити; Під запитанням
+ * display: flex
+ * align-items: center
+ * margin-bottom: 50px */
 .searchLine {
   display: flex;
   align-items: center;
-  margin-bottom: 50px;
 }
 
 .find {
@@ -356,7 +396,7 @@ p {
   height: 43px;
   margin-left: -8px;
   background: deeppink;
-  border-radius: 0px 9px 9px 0px;
+  border-radius: 0 9px 9px 0;
   text-align: center;
   line-height: 42px;
   font-weight: 600;
@@ -373,115 +413,105 @@ p {
   font-weight: 600;
 }
 
-.carTopLine {
+.rentLine {
   display: flex;
-  margin: 0 15% 0 15%;
+  align-items: center;
+  margin: 25px auto;
 }
 
-.rateBlock {
+.date {
+  height: 29px;
+  width: 128px;
+  margin-right: 21px;
+  margin-left: auto;
+  background: white;
+  border-radius: 16px;
+  text-align: center;
   display: flex;
-  vertical-align: center;
 }
 
-.rate {
-  vertical-align: center;
-  margin-right: 2px;
+.date {
+  color: silver;
+  font-family: "Gogh", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.carLike {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-.slider {
+.date p {
   margin: auto;
 }
 
-.sliderLeft {
-  position: absolute;
-  top: 40%;
-  left: 7%;
-}
-
-.sliderRight {
-  position: absolute;
-  top: 40%;
-  right: 7%;
-}
-
-.slider__items {
-  height: 150px;
-  margin-top: 20px;
-}
-
-.slider__item {
+.city {
+  height: 29px;
+  width: 128px;
+  margin-left: 21px;
+  background: white;
+  border-radius: 16px;
   text-align: center;
-}
-
-.slider__item img {
-  max-width: 75%;
-  max-height: 150px;
-}
-
-.carNameBlock {
-  text-align: center;
-}
-
-.carNameBlock p {
-  margin: 2px;
-}
-
-.carPrice {
-  color: yellow;
-}
-
-.carButtonLine {
   display: flex;
+}
+
+.city {
+  color: silver;
+  font-family: "Gogh", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.city p {
+  margin: auto;
+}
+
+.cars {
+  margin-top: 25px;
+}
+
+.cars {
+  padding: 0;
+  list-style-type: none;
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.cars li {
+  width: 170px;
+  height: 200px;
+  text-align: center;
+  margin: auto;
+  padding: 2px 5px;
+}
+
+li .like {
+  text-align: left;
+}
+
+.chButton {
+  width: 104px;
+  height: 24px;
+  border: solid deeppink;
+  border-radius: 5px;
+  margin: 7px auto auto;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+}
+
+.price {
+  color: yellow;
+  margin-top: 2px;
+}
+
+.name {
   margin-top: 12px;
 }
 
-.carBuyButton {
-  width: 157px;
-  height: 46px;
-  border-radius: 9px;
-  background-color: deeppink;
-  margin-left: 7%;
-  margin-right: 3%;
-  line-height: 46px;
-  text-align: center;
-}
-
-.carReserveButton {
-  width: 157px;
-  height: 46px;
-  border-radius: 9px;
-  border-style: solid;
-  border-color: deeppink;
-  margin-right: 7%;
-  margin-left: auto;
-  line-height: 46px;
-  text-align: center;
-}
-
-.carParameters {
-  margin-top: 40px;
-  padding-bottom: 40px;
-}
-
-.carParameters li {
-  list-style: none;
-  display: flex;
-  margin-top: 5px;
-}
-
-.parameter {
-  margin-left: 12%;
-  margin-right: auto;
-}
-
-.parameterValue {
-  margin-left: 3%;
-  margin-right: 12%;
+li .img {
+  position: relative;
+  width: 151px;
+  height: 75px;
+  margin: auto;
 }
 
 .bottom {
@@ -495,5 +525,182 @@ p {
 
 .src {
   margin: 14px auto auto 15%;
+}
+
+.filtersFull {
+  display: none;
+  background-color: deeppink;
+  width: 203px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: 0;
+  text-align: center;
+  border-radius: 9px 0 0 9px;
+  font-size: 15px;
+  z-index: 1;
+  top: 121px;
+  right: 0;
+  height: 500px;
+  overflow: scroll;
+}
+
+.filters:hover .filtersFull {
+  display: block;
+}
+
+.filtersFull::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+.filtersFull ul {
+  padding: 0;
+}
+
+.filtersFull li {
+  list-style-type: none;
+  margin: auto;
+}
+
+.Fline1 {
+  display: flex;
+  height: 43px;
+}
+
+.Fline1 img {
+  height: 12px;
+  margin-left: 12px;
+  margin-top: 13px;
+}
+
+.Fline1 p {
+  margin: auto;
+  position: relative;
+  right: 11px;
+}
+
+.fromTo {
+  display: flex;
+  font-size: 9px;
+  margin: auto;
+}
+
+.fromTo p {
+  margin: 0;
+}
+
+.from {
+  margin-left: 29px;
+  margin-right: 33px;
+}
+
+.fromVal {
+  width: 56px;
+  height: 18px;
+  border-radius: 5px;
+  border-color: #FFFFFF;
+  border-style: solid;
+  line-height: 18px;
+  text-align: center;
+}
+
+.fromN {
+  position: relative;
+  line-height: 15px;
+  color: #AE007D;
+  right: 20%;
+}
+
+.toVal {
+  width: 56px;
+  height: 18px;
+  border-radius: 5px;
+  border-color: #FFFFFF;
+  border-style: solid;
+  line-height: 18px;
+  text-align: center;
+}
+
+.toN {
+  position: relative;
+  line-height: 15px;
+  color: #AE007D;
+  left: 20%;
+}
+
+.sortFull {
+  display: none;
+  background-color: deeppink;
+  width: 203px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: 0;
+  text-align: center;
+  border-radius: 0 9px 9px 0;
+  font-size: 15px;
+  z-index: 1;
+  top: 121px;
+  left: 0;
+  height: 500px;
+  overflow: scroll;
+}
+
+.sort:hover .sortFull {
+  display: block;
+}
+
+.sortFull::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+.sortFull ul {
+  padding: 0;
+  margin: 0;
+}
+
+.sortFull li {
+  margin-top: 45px;
+}
+
+.sortFull .X {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  height: 12px;
+}
+
+.sideMenuFull {
+  display: none;
+  background-color: midnightblue;
+  width: 203px;
+  height: 100vh;
+  position: absolute;
+  margin-left: auto;
+  margin-right: 0;
+  text-align: center;
+  border-radius: 0 9px 9px 0;
+  font-size: 15px;
+  z-index: 3;
+  top: 0;
+  left: 0;
+}
+
+.sideMenu:hover .sideMenuFull {
+  display: block;
+}
+
+.sideMenuFull ul {
+  padding: 0;
+  margin: 0;
+}
+
+.sideMenuFull li {
+  margin-top: 30%;
+}
+
+.sideMenuFull .X {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  height: 12px;
 }
 </style>

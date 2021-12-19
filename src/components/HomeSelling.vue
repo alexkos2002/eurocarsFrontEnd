@@ -1,10 +1,25 @@
 <template>
-    <div>
-      <header>
+   <div class="mainWrapper">
+         <header>
           <div class="sideMenu">
               <div class="rectangle"></div>
               <div class="rectangle"></div>
               <div class="rectangle"></div>
+
+              <div class="sideMenuFull">
+                  <div class="X">
+                      <img src="../assets/icons/X.png">
+                  </div>
+                  <ul>
+                      <li><a>Акції та пропозиції</a></li>
+                      <li><a>Компанії, що співпрацюють з нами</a></li>
+                      <li><a>Про нас</a></li>
+                      <li><a>Стати партнером</a></li>
+                      <li><a>Privacy policy</a></li>
+                      <li><a>FAQ</a></li>
+                      <li><a>Admin profile</a></li>
+                  </ul>
+              </div>
           </div>
           <div class="shop">
               <img src="../assets/icons/shop.png">
@@ -19,17 +34,19 @@
               <div class="cash">
                   <img src="../assets/icons/$.png">
               </div>
-              <div class="profile">
-                  <img src="../assets/icons/profile.png">
-              </div>
+              <a id="profileLink" v-on:click="showLoginForm()">
+                <div class="profile">
+                    <img src="../assets/icons/profile.png">
+                </div>
+              </a>
           </div>
       </header>
       <main>
           <div class="chose">
-                  <div class="buy selected">
+              <div class="buy" id="chosen">
                   <a href="/home/selling">Купити</a>
               </div>
-              <div class="rent unselected">
+              <div class="rent">
                   <a href="/home/rental">Орендувати</a>
               </div>
           </div>
@@ -102,7 +119,7 @@
                       </div>
                   </div>
               </div>
-              <div class="rentLine"> <!-- Element which appears only on rental page-->
+              <div class="rentLine"> <!-- Блок, що з'являється лише при оренді -->
                   <div class="city"><p>Місто</p></div>
                   <div class="date"><p>Дата</p></div>
               </div>
@@ -215,15 +232,50 @@
               </ul>
           </div>
       </main>
+    <div class="bottom">
+        <img class="src" src="../assets/icons/bigSearch.png">
+    </div>
     </div>
 </template>
 
 <script>
-    
+import VueRouter from "../router/index"
+import Pathes from "../constants/Pathes"
+import StringConstants from "../constants/StringConstants"
+
+    export default {
+      name: 'HomeSelling',
+      methods: {
+        showLoginForm() {
+          if (localStorage.getItem('jwt') && localStorage.getItem('roles')) {
+            if (localStorage.getItem('roles').includes(StringConstants.ADMIN_ROLE)) {
+              VueRouter.push(Pathes.ADMIN_ROOM_PATH);
+            } else if (localStorage.getItem('roles').includes(StringConstants.MANAGER_ROLE)) {
+              VueRouter.push(Pathes.HOME_RENTAL_PATH);
+            } else {
+              VueRouter.push(Pathes.HOME_RENTAL_PATH);
+            }
+          } else {
+            VueRouter.push(Pathes.SIGN_IN_PATH);
+          }
+        
+        }
+      }
+    }
 </script>
 
 <style>
-           @charset "UTF-8";
+
+@charset "UTF-8";
+@charset "UTF-8";
+
+.mainWrapper {
+  font-weight: 600;
+  background: #2f134b;
+  color: white;
+  margin: 0;
+  font-family: "Gogh", sans-serif;
+}
 
 header {
   height: 62px;
@@ -241,13 +293,6 @@ main {
 
 p {
   margin: 0;
-}
-
-.mainwrapper {
-  background: #2f134b;
-  color: white;
-  margin: 0;
-  font-family: "Gogh", sans-serif;
 }
 
 .rectangle {
@@ -284,37 +329,26 @@ p {
 
 .chose {
   display: flex;
+  font-size: 1.5em;
   font-family: "Gogh", sans-serif;
-  font-size: small;
+}
+
+.chose>div>a{
+  text-decoration: none;
+  font-size: 1.5em;
+  color: white;
+  font-family: "Gogh", sans-serif;
 }
 
 .chose div {
   width: 100%;
   text-align: center;
-  color: #4f0154;
-  border-radius: 10px 10px 1px 1px;
-  margin: auto 8px;
-}
-
-.chose div a {
-  text-decoration: none;
-  font-size: 2em;
-  color: #FFFFFF;
-}
-
-.chose div:hover{
-  width: 100%;
-  text-align: center;
-  background: #77026d;
-  border-radius: 10px 10px 1px 1px;
-  margin: auto 8px;
-}
-
-.unselected {
   background: #4f0154;
+  border-radius: 10px 10px 1px 1px;
+  margin: auto 8px;
 }
 
-.selected {
+#chosen {
   background: #77026d;
 }
 
@@ -454,11 +488,12 @@ li .like {
 
 .chButton {
   width: 104px;
+  color: white;
   height: 24px;
   border: solid deeppink;
   border-radius: 5px;
   margin: 7px auto auto;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 14px;
   line-height: 22px;
   text-align: center;
@@ -628,6 +663,42 @@ li .img {
 }
 
 .sortFull .X {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  height: 12px;
+}
+
+.sideMenuFull {
+  display: none;
+  background-color: midnightblue;
+  width: 203px;
+  height: 100vh;
+  position: absolute;
+  margin-left: auto;
+  margin-right: 0;
+  text-align: center;
+  border-radius: 0 9px 9px 0;
+  font-size: 15px;
+  z-index: 3;
+  top: 0;
+  left: 0;
+}
+
+.sideMenu:hover .sideMenuFull {
+  display: block;
+}
+
+.sideMenuFull ul {
+  padding: 0;
+  margin: 0;
+}
+
+.sideMenuFull li {
+  margin-top: 30%;
+}
+
+.sideMenuFull .X {
   position: absolute;
   right: 12px;
   top: 10px;

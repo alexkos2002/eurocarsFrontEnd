@@ -27,7 +27,7 @@
 <main>
     <div class="topBar">
         <ul class="tabGroup">
-            <li class="one">
+            <li class="one chosen">
                 <a href="/room/admin">
                     <img src="../assets/icons/admin.png">
                 </a>
@@ -37,7 +37,7 @@
                     Адміни
                 </a>
             </li>
-            <li class="three chosen">
+            <li class="three">
                 <a href="/user">
                     Користувачі
                 </a>
@@ -50,30 +50,32 @@
             <li class="helper"></li>
         </ul>
     </div>
-    <div class="adminList">
-        <ul>
-            <li v-for="user in users" v-bind:key="user.id">
-                <div class="deleteButton">
-                    <img src="../assets/icons/delete.png" v-on:click="deleteUser(user.id)">
-                </div>
-                <div class="adminPhoto">
-                    <img src="../assets/icons/adminPhoto.png">
-                </div>
-                <div class="adminInfo">
-                    <p class="adminName">{{user.username}}</p>
-                    <p class="adminNick">{{user.email}}</p>
-                    <p class="adminNumber">{{user.telephoneNum}}</p>
-                </div>
-                <div class="banArea">
-                  <div class="banForm">
-                    <img src="../assets/icons/banIcon.png" v-if="user.active" class="banButton" id="banButtonId" v-on:click="changeUserActiveStatus(user.id, false)">
-                  </div>
-                  <div class="banForm">
-                    <img src="../assets/icons/unbanIcon.png" v-if="!user.active" type="submit" class="banButton" id="unbanButtonId" v-on:click="changeUserActiveStatus(user.id, true)">
-                  </div>
-                </div>
-            </li>
-        </ul>
+    <div class="adminMainPage">
+        <div class="approvalArea">
+          <img src="../assets/icons/tick.png" v-on:click="updateAdmin">
+        </div>
+      <form method="put" ref="adminUpdateForm">
+          <div class="currentAdminPhoto">
+            <img src="../assets/icons/adminPhoto.png">
+          </div>
+          <div>
+            <input type="text" name="username" class="currentAdminName" v-model.trim="userUpdateDto.username" :placeholder="userUpdateDto.username">  
+          </div>
+          <div>
+            <input type="text" name="email" class="currentAdminNick" v-model.trim="userUpdateDto.email" :placeholder="userUpdateDto.email">
+          </div>
+          <div>
+            <input type="text" name="telephoneNum" class="currentAdminPhone" v-model.trim="userUpdateDto.telephoneNum" :placeholder="userUpdateDto.telephoneNum">
+          </div>
+            <input type="hidden" name="roles" v-model.trim="userUpdateDto.roles">
+            <input type="hidden" name="active" v-model.trim="userUpdateDto.active">
+          <div>
+          </div>
+          <div v-if="updateFormSent && !updateSuccess" class="alert alert-warning">The user with this name is already registered!</div>
+      </form>
+      <div class="logoutArea">
+        <div class="logOutLink" v-on:click="logout">Вийти</div>
+      </div>
     </div>
 </main>
 <div class="bottom">
@@ -84,15 +86,17 @@
 
 <script>
 
-import StringConstants from "../constants/StringConstants"
+import PersonalRoomService from '../services/PersonalRoomService';
 import UserService from '../services/UserService';
-import VueRouter from "../router/index"
-import Pathes from "../constants/Pathes"
+import AuthService from '../services/AuthService';
+import VueRouter from "../router/index";
+import Pathes from "../constants/Pathes";
 
     export default {
-        name: 'AllUsers',
+        name: 'AdminRoom',
         data() {
             return {
+                admin : null,
                 userUpdateDto: {
                   username: null,
                   email: null,
@@ -100,47 +104,39 @@ import Pathes from "../constants/Pathes"
                   active: true,
                   roles: [],
                 },
-                users : [],
-                authUserRoles : [],
-                banSuccess: false,
+                updateSuccess:  true,
+                updateFormSent: false
             }
         }, 
         methods: {
-            getUsers() {
-                UserService.getUsersByRole(StringConstants.USER_ROLE).then((response) => {
-                    this.users = response.data;
+            getAdminData() {
+                PersonalRoomService.getAdminData().then((response) => {
+                    this.admin = response.data;
+                    this.userUpdateDto = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
-                    VueRouter.push(Pathes.ERROR_403_PATH);
+                    VueRouter.push(Pathes.SIGN_IN_PATH);
                 });
             },
-            getAuthUserRoles() {
-                this.authUserRoles = localStorage.getItem('roles');
-            },
-            deleteUser(id) {
-                UserService.deleteUser(id);
-                window.location.reload();
-            },
-            changeUserActiveStatus(userId, active) {
-                let userToChange = this.users.find(user => user.id == userId);
-                console.log(userToChange.username);
-                this.userUpdateDto.username = userToChange.username;
-                this.userUpdateDto.email = userToChange.email;
-                this.userUpdateDto.telephoneNum = userToChange.telephoneNum;
-                this.userUpdateDto.active = active;
-                this.userUpdateDto.roles = userToChange.roles;
-                UserService.updateUser(userId, this.userUpdateDto)
+            updateAdmin(e) {
+                e.preventDefault();
+                UserService.updateUser(this.admin.id, this.userUpdateDto)
                 .then((response) => {
-                  if (response.data.success) {
-                    window.location.reload();
-                  }
+                    this.updateSuccess = response.data.success;
                 });
+                this.updateFormSent = true;
+            },
+            submitAdminUpdateForm() {
+              this.$refs.adminUpdateForm.submit();
+            },
+            logout() {
+              AuthService.logout();
+              VueRouter.push(Pathes.HOME_RENTAL_PATH);
             }
         },
         created() {
-            this.getUsers();
-            this.getAuthUserRoles();
+          this.getAdminData();
         }
     }
 </script>
@@ -175,7 +171,7 @@ p{
   margin: 3px;
   width: 25px;
   height: 2px;
-  background: #FFFFFF
+  background: #FFFFFF;
 }
 
 .logo{
@@ -218,7 +214,8 @@ p{
   height: 43px;
   line-height: 43px;
   text-align: center;
-  border-radius: 7px 7px 0 0
+  border-radius: 7px 7px 0 0;
+  margin: 0 1.2% 0 1.2%;
 }
 
 a{
@@ -243,7 +240,7 @@ a{
 }
 
 .topBar .four{
-  background-color: darkslateblue; 
+  background-color: darkslateblue;
   width: 25%
 }
 
@@ -253,14 +250,107 @@ a{
   visibility: hidden
 }
 
+.approvalArea{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 1.5em;
+  padding-right: 1em;
+  padding-bottom: 2em;
+}
+
 .chosen{
   background-color: mediumslateblue !important
 }
 
-.adminList {
+.adminMainPage{
   background-color: mediumslateblue;
+  margin: 0 8px;
   height: 74vh;
-  margin: 0 8px
+  font-size: 14px
+}
+
+.adminMainPage div input {
+  background-color: mediumslateblue;
+  color: white;
+}
+
+.adminMainPage div input:hover {
+  border-color: white;
+}
+
+.adminMainPage div input:focus {
+  border-color: white;
+}
+
+.adminMainPage div input::placeholder {
+  font-size: 14px;
+  color: white;
+  margin: 0;
+  font-family: "Gogh", sans-serif;
+  font-weight: 700;
+}
+
+.currentAdminPhoto{
+  width: 71px;
+  height: 71px;
+  margin: auto auto 20px
+}
+
+.currentAdminName{
+  width: 185px;
+  height: 30px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 9px;
+  border-color: darkslateblue;
+  line-height: 30px;
+  text-align: center;
+  margin: 11px auto
+}
+
+.currentAdminNick{
+  width: 185px;
+  height: 30px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 9px;
+  border-color: darkslateblue;
+  line-height: 30px;
+  text-align: center;
+  margin: 11px auto;
+}
+
+.currentAdminPhone{
+  width: 185px;
+  height: 30px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 9px;
+  border-color: darkslateblue;
+  line-height: 30px;
+  text-align: center;
+  margin: 11px auto
+}
+
+.logoutArea{
+  padding-top: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logOutLink{
+  width: 104px;
+  height: 28px;
+  background-color: darkslateblue;
+  border-radius: 5px;
+  margin: 7px auto auto;
+  padding-top: 3px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  text-align: center;
 }
 
 .adminList ul {
@@ -273,29 +363,8 @@ a{
 }
 
 .adminInfo{
-  text-align: left;
   margin-left: 34px;
   font-size: 14px
-}
-
-.banArea{
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.banForm{
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 1em;
-}
-
-.banButton{
-  width: 30px;
-  height: 30px;
-  border-radius: 5px;
-  margin: 7px auto auto;
-  padding-bottom: 3px;
 }
 
 .companyList{
@@ -425,21 +494,6 @@ li .like{
   text-align: left
 }
 
-
-.chButton{
-  width: 104px;
-  height: 24px;
-  border: solid mediumpurple;
-  color: mediumpurple;
-  border-radius: 5px;
-  margin: 7px auto auto;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 22px;
-  text-align: center
-}
-
-
 .price{
   color: yellow;
   margin-top: 2px
@@ -473,8 +527,6 @@ li .img{
   border-radius: 9px
 }
 
-
-
 .bottom{
   height: 58px;
   width: 100%;
@@ -487,4 +539,5 @@ li .img{
 .src{
   margin: 14px auto auto 15%
 }
+  
 </style>

@@ -32,12 +32,12 @@
                     <img src="../assets/icons/admin.png">
                 </a>
             </li>
-            <li class="two">
+            <li class="two chosen">
                 <a href="/manager">
                     Адміни
                 </a>
             </li>
-            <li class="three chosen">
+            <li class="three">
                 <a href="/user">
                     Користувачі
                 </a>
@@ -52,28 +52,23 @@
     </div>
     <div class="adminList">
         <ul>
-            <li v-for="user in users" v-bind:key="user.id">
+            <li v-for="manager in managers" v-bind:key="manager.id">
                 <div class="deleteButton">
-                    <img src="../assets/icons/delete.png" v-on:click="deleteUser(user.id)">
+                    <img src="../assets/icons/delete.png" v-on:click="deleteManager(manager.id)">
                 </div>
                 <div class="adminPhoto">
                     <img src="../assets/icons/adminPhoto.png">
                 </div>
                 <div class="adminInfo">
-                    <p class="adminName">{{user.username}}</p>
-                    <p class="adminNick">{{user.email}}</p>
-                    <p class="adminNumber">{{user.telephoneNum}}</p>
-                </div>
-                <div class="banArea">
-                  <div class="banForm">
-                    <img src="../assets/icons/banIcon.png" v-if="user.active" class="banButton" id="banButtonId" v-on:click="changeUserActiveStatus(user.id, false)">
-                  </div>
-                  <div class="banForm">
-                    <img src="../assets/icons/unbanIcon.png" v-if="!user.active" type="submit" class="banButton" id="unbanButtonId" v-on:click="changeUserActiveStatus(user.id, true)">
-                  </div>
+                    <p class="adminName">{{manager.username}}</p>
+                    <p class="adminNick">{{manager.email}}</p>
+                    <p class="adminNumber">{{manager.telephoneNum}}</p>
                 </div>
             </li>
         </ul>
+        <div class="managerCreationArea">
+          <div class="managerCreationLink" v-on:click="showManagerCreationForm">Створити нового адміна</div>
+        </div>
     </div>
 </main>
 <div class="bottom">
@@ -90,25 +85,17 @@ import VueRouter from "../router/index"
 import Pathes from "../constants/Pathes"
 
     export default {
-        name: 'AllUsers',
+        name: 'AllManagers',
         data() {
             return {
-                userUpdateDto: {
-                  username: null,
-                  email: null,
-                  telephoneNum: null,
-                  active: true,
-                  roles: [],
-                },
-                users : [],
-                authUserRoles : [],
-                banSuccess: false,
+                managers : [],
+                authUserRoles : []
             }
         }, 
         methods: {
-            getUsers() {
-                UserService.getUsersByRole(StringConstants.USER_ROLE).then((response) => {
-                    this.users = response.data;
+            getManagers() {
+                UserService.getUsersByRole(StringConstants.MANAGER_ROLE).then((response) => {
+                    this.managers = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -118,28 +105,16 @@ import Pathes from "../constants/Pathes"
             getAuthUserRoles() {
                 this.authUserRoles = localStorage.getItem('roles');
             },
-            deleteUser(id) {
+            deleteManager(id) {
                 UserService.deleteUser(id);
                 window.location.reload();
             },
-            changeUserActiveStatus(userId, active) {
-                let userToChange = this.users.find(user => user.id == userId);
-                console.log(userToChange.username);
-                this.userUpdateDto.username = userToChange.username;
-                this.userUpdateDto.email = userToChange.email;
-                this.userUpdateDto.telephoneNum = userToChange.telephoneNum;
-                this.userUpdateDto.active = active;
-                this.userUpdateDto.roles = userToChange.roles;
-                UserService.updateUser(userId, this.userUpdateDto)
-                .then((response) => {
-                  if (response.data.success) {
-                    window.location.reload();
-                  }
-                });
+            showManagerCreationForm() {
+              VueRouter.push(Pathes.CREATE_MANAGER_PATH);
             }
         },
         created() {
-            this.getUsers();
+            this.getManagers();
             this.getAuthUserRoles();
         }
     }
@@ -243,7 +218,7 @@ a{
 }
 
 .topBar .four{
-  background-color: darkslateblue; 
+  background-color: darkslateblue;
   width: 25%
 }
 
@@ -276,26 +251,6 @@ a{
   text-align: left;
   margin-left: 34px;
   font-size: 14px
-}
-
-.banArea{
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.banForm{
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 1em;
-}
-
-.banButton{
-  width: 30px;
-  height: 30px;
-  border-radius: 5px;
-  margin: 7px auto auto;
-  padding-bottom: 3px;
 }
 
 .companyList{
@@ -426,17 +381,24 @@ li .like{
 }
 
 
-.chButton{
-  width: 104px;
-  height: 24px;
-  border: solid mediumpurple;
-  color: mediumpurple;
+.managerCreationArea{
+  padding-top: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.managerCreationLink{
+  width: 235px;
+  height: 32px;
+  background-color: darkslateblue;
   border-radius: 5px;
   margin: 7px auto auto;
-  font-weight: normal;
-  font-size: 14px;
+  padding-top: 5px;
+  font-weight: 600;
+  font-size: 16px;
   line-height: 22px;
-  text-align: center
+  text-align: center;
 }
 
 

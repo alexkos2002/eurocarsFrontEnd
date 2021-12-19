@@ -1,9 +1,6 @@
 <template>
     <div class="container mt-4" style="width: 20em; border: 2px solid #999; border-radius: 5px">
     <form method="post" @submit="registerUser" class="form-group" id="regForm">
-        <div>
-            <p text="${addUserMessage}" class="cRed"></p>
-        </div>
         <label for="username">Enter name: </label>
         <input type="text" name="username" v-model="userRegDto.username" v-validate="'required'" class="form-control" id="username">
         <br/>
