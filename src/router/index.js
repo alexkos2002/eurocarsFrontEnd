@@ -6,6 +6,10 @@ import HomeRental from "../components/HomeRental";
 import Login from "../components/Login"
 import Registration from "../components/Registration"
 import Error403 from "../components/Error403"
+import CarPage from "../components/CarPage";
+import addAdmin from "../components/addAdmin";
+import History from  "../components/history";
+import Order from  "../components/order"
 
 export default new VueRouter({
     mode: 'history',
@@ -26,6 +30,11 @@ export default new VueRouter({
             component: HomeRental
         },
         {
+            path: '/home/carPage',
+            name: 'carPage',
+            component: CarPage
+        },
+        {
             path: '/auth/signin',
             name: 'login',
             component: Login
@@ -34,6 +43,21 @@ export default new VueRouter({
             path: "/auth/signup",
             name: "registration",
             component: Registration
+        },
+        {
+            path: "/addAdmin",
+            name: "addAdmin",
+            component: addAdmin
+        },
+        {
+          path: "/history",
+          name: "history",
+          component: History
+        },
+        {
+          path: "/order",
+          name: "order",
+          component: Order
         },
         {
             path: "/error/403",
